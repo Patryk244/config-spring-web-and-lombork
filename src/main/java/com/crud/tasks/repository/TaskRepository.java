@@ -10,5 +10,7 @@ import java.util.*;
 public interface TaskRepository extends CrudRepository<Task, Integer> {
     List<Task> findAll();
     List<Task> findAllById(Long id);
-    List<Task> deleteAllById(Long id);
+    List<Task> deleteById(Long id);
+    boolean existsById(Long id);
+
 }

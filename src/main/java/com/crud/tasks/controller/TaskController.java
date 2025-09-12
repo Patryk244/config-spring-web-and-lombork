@@ -21,17 +21,20 @@ public class TaskController {
     @GetMapping
     public List<TaskDto> getTasks() {
         List<Task> tasks = service.getAllTasks();
+        System.out.println("Version One");
         return taskMapper.mapToTaskDtoList(tasks);
     }
 
     @GetMapping(value = "/{taskId}")
     public List<TaskDto> getTask(@PathVariable Long taskId) {
         List<Task> task = service.getTasksById(taskId);
+        System.out.println("Version Two");
         return taskMapper.mapToTaskDtoList(task);
     }
 
     @DeleteMapping("/{taskId}")
     public void deleteTask(@PathVariable Long taskId) {
+        service.getToRemoveById(taskId);
     }
 
     @PutMapping("/{taskId}")
@@ -45,5 +48,12 @@ public class TaskController {
 
     @PostMapping
     public void createTask(@RequestBody TaskDto taskDto) {
+        Task task = new Task(
+                null,
+                taskDto.getTitle(),
+                taskDto.getContent()
+        );
+        System.out.println("Version four");
+        service.save(task);
     }
 }

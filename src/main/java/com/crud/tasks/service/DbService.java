@@ -1,4 +1,7 @@
 package com.crud.tasks.service;
+import com.crud.tasks.domain.TaskDto;
+import com.crud.tasks.domain.TaskNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
 import com.crud.tasks.repository.TaskRepository;
@@ -20,7 +23,17 @@ public class DbService {
         return repository.findAllById(id);
     }
 
+    @Transactional
     public void getToRemoveById(final Long id) {
-        repository.deleteAllById(id);
+        if (!repository.existsById(id)) {
+            throw new TaskNotFoundException(id);
+        }
+        repository.deleteById(id);
     }
+
+    @Transactional
+    public void save(Task task) {
+        repository.save(task);
+    };
+
 }
