@@ -15,4 +15,12 @@ public class DbService {
     public List<Task> getAllTasks() {
         return repository.findAll();
     }
+
+    public List<Task> getTasksById(final long id) {
+        return repository.findAllById(id);
+    }
+
+    public void getToRemoveById(final Long id) {
+        repository.deleteAllById(id);
+    }
 }
