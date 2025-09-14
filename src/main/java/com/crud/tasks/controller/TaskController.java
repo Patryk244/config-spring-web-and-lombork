@@ -3,7 +3,9 @@ package com.crud.tasks.controller;
 import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
+import jakarta.transaction.Transactional;
 import lombok.*;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -25,16 +27,21 @@ public class TaskController {
         return taskMapper.mapToTaskDtoList(tasks);
     }
 
-    @GetMapping(value = "/{taskId}")
-    public List<TaskDto> getTask(@PathVariable Long taskId) {
-        List<Task> task = service.getTasksById(taskId);
-        System.out.println("Version Two");
-        return taskMapper.mapToTaskDtoList(task);
+    @GetMapping(value = "{taskId}")
+    public ResponseEntity<TaskDto> getTask(@PathVariable Long taskId) throws TaskNotFoundException {
+        return ResponseEntity.ok(taskMapper.mapToTaskDto(service.getTask(taskId)));
     }
 
+    @Transactional
     @DeleteMapping("/{taskId}")
-    public void deleteTask(@PathVariable Long taskId) {
-        service.getToRemoveById(taskId);
+    public ResponseEntity<Void> deleteTask(@PathVariable Long taskId) throws TaskNotFoundException {
+        try {
+            service.deleteTask(taskId);
+        } catch (Exception e) {
+            throw new TaskNotFoundException();
+
+        }
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{taskId}")
@@ -46,14 +53,9 @@ public class TaskController {
         );
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createTask(@RequestBody TaskDto taskDto) {
-        Task task = new Task(
-                null,
-                taskDto.getTitle(),
-                taskDto.getContent()
-        );
-        System.out.println("Version four");
-        service.save(task);
+        Task task = taskMapper.mapToTask(taskDto);
+        service.saveTask(task);
     }
 }

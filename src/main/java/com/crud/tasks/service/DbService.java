@@ -1,7 +1,5 @@
 package com.crud.tasks.service;
-import com.crud.tasks.domain.TaskDto;
-import com.crud.tasks.domain.TaskNotFoundException;
-import jakarta.transaction.Transactional;
+import com.crud.tasks.controller.TaskNotFoundException;
 import lombok.*;
 
 import com.crud.tasks.repository.TaskRepository;
@@ -19,21 +17,16 @@ public class DbService {
         return repository.findAll();
     }
 
-    public List<Task> getTasksById(final long id) {
-        return repository.findAllById(id);
+    public Task saveTask(Task task) {
+        return repository.save(task);
     }
 
-    @Transactional
-    public void getToRemoveById(final Long id) {
-        if (!repository.existsById(id)) {
-            throw new TaskNotFoundException(id);
-        }
-        repository.deleteById(id);
+    public Task getTask(final Long taskId) throws TaskNotFoundException {
+        return repository.findById(taskId).orElseThrow(TaskNotFoundException::new);
     }
 
-    @Transactional
-    public void save(Task task) {
-        repository.save(task);
-    };
+    public void deleteTask(final Long taskId) {
+        repository.removeTaskById(taskId);
+    }
 
 }
