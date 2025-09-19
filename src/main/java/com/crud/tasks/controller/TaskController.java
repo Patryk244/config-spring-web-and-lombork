@@ -9,7 +9,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/v1/tasks")
 @RequiredArgsConstructor
@@ -44,14 +44,13 @@ public class TaskController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{taskId}")
-    public TaskDto updateTask(@PathVariable Long taskId, @RequestBody TaskDto taskDto) {
-        return new TaskDto(
-                taskId,
-                "Edited: " + taskDto.getTitle(),
-                "Edited: " + taskDto.getContent()
-        );
+    @PutMapping
+    public ResponseEntity<TaskDto> updateTask(@RequestBody TaskDto taskDto) {
+        Task task = taskMapper.mapToTask(taskDto);
+        Task savedTask = service.saveTask(task);
+        return ResponseEntity.ok(taskMapper.mapToTaskDto(savedTask));
     }
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createTask(@RequestBody TaskDto taskDto) {
