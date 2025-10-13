@@ -23,7 +23,7 @@ public class TrelloController {
 
          */
         trelloBoards.stream()
-                .filter(b -> b.getName().equals("Kodilla"))
+                .filter(b -> b.getName().contains("Kodilla"))
                 .map(b -> b.getId() + " " + b.getName())
                 .forEach(System.out::println);
     }
