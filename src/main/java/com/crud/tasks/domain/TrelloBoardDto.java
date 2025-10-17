@@ -5,6 +5,8 @@ import lombok.*;
 import java.util.*;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TrelloBoardDto {
     @JsonProperty("id")
     private String name;
