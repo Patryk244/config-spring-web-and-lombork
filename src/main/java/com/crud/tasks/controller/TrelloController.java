@@ -44,7 +44,7 @@ public class TrelloController {
 
     }
 
-    @PostMapping(value = "createdCard", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "cards", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CreatedTrelloCard createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
         return trelloService.createNewCard(trelloCardDto);
     }

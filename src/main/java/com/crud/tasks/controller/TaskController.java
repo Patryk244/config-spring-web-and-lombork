@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/v1/task")
+@RequestMapping("/v1/tasks")
 @RequiredArgsConstructor
 public class TaskController {
 
@@ -23,7 +23,6 @@ public class TaskController {
     @GetMapping
     public List<TaskDto> getTasks() {
         List<Task> tasks = service.getAllTasks();
-        System.out.println("Version One");
         return taskMapper.mapToTaskDtoList(tasks);
     }
 
@@ -52,9 +51,10 @@ public class TaskController {
     }
 
 
-    @PostMapping(value = "/createTask",consumes = MediaType.ALL_VALUE)
-    public void createTask(@RequestBody TaskDto taskDto) {
+    @PostMapping()
+    public ResponseEntity<Void> createTask(@RequestBody TaskDto taskDto) {
         Task task = taskMapper.mapToTask(taskDto);
         service.saveTask(task);
+        return ResponseEntity.ok().build();
     }
 }
