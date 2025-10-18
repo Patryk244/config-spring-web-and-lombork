@@ -16,12 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class TrelloController {
-    private final TrelloClient trelloClient;
+    private final TrelloClient trelloService;
     private final RestTemplate restTemplate;
 
     @GetMapping("boards")
     public void getTrelloBoards(){
-        List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards();
+        List<TrelloBoardDto> trelloBoards = trelloService.getTrelloBoards();
         /*
         trelloBoards.forEach(trelloBoardDto -> {
             System.out.println(trelloBoardDto.getId() + " " + trelloBoardDto.getName().equals("Kodiila"));
@@ -46,7 +46,7 @@ public class TrelloController {
 
     @GetMapping("createdCard")
     public void getCreatedCard(){
-        List<CreatedTrelloCard> trelloCards = trelloClient.getCreatedTrelloCards();
+        List<CreatedTrelloCard> trelloCards = trelloService.getCreatedTrelloCards();
         trelloCards.forEach(trelloCard -> {
            System.out.println(trelloCard.getBadges().getAttachmentsByType().getTrello().getCard());
         });
@@ -56,6 +56,6 @@ public class TrelloController {
 
     @PostMapping("cards")
     public CreatedTrelloCard createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
-        return trelloClient.createNewCard(trelloCardDto);
+        return trelloService.createNewCard(trelloCardDto);
     }
 }
