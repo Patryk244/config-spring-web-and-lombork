@@ -3,6 +3,7 @@ package com.crud.tasks.controller;
 import com.crud.tasks.domain.CreatedTrelloCard;
 import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.domain.TrelloCardDto;
+import com.crud.tasks.service.TrelloService;
 import com.crud.tasks.trello.client.TrelloClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -17,12 +18,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin("*")
 public class TrelloController {
-    private final TrelloClient trelloService;
+    private final TrelloService trelloService;
     private final RestTemplate restTemplate;
 
     @GetMapping("/boards")
     public List<TrelloBoardDto> getTrelloBoards(){
-        List<TrelloBoardDto> trelloBoards = trelloService.getTrelloBoards();
+        List<TrelloBoardDto> trelloBoards = trelloService.fetchTrelloBoards();
         trelloBoards.forEach(trelloBoardDto -> {
             System.out.println(trelloBoardDto.getId() + " - " + trelloBoardDto.getName());
             System.out.println("This board contains lists: ");
@@ -34,18 +35,9 @@ public class TrelloController {
         return trelloBoards;
     }
 
-    @GetMapping("cards")
-    public void getCreatedCard(){
-        List<CreatedTrelloCard> trelloCards = trelloService.getCreatedTrelloCards();
-        trelloCards.forEach(trelloCard -> {
-           System.out.println(trelloCard.getBadges().getAttachmentsByType().getTrello().getCard());
-        });
 
-
-    }
-
-    @PostMapping(value = "cards", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CreatedTrelloCard createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
-        return trelloService.createNewCard(trelloCardDto);
+    @PostMapping(value = "cards")
+    public ResponseEntity<CreatedTrelloCard> createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
+        return ResponseEntity.ok(trelloService.createTrelloCard(trelloCardDto));
     }
 }

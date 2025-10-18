@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,9 +16,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SimpleEmailService {
 
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
 
-    public void sendEmail(Mail mail) {
+    public void sendEmail(final Mail mail) {
+        log.info("Starting email preparation...");
         try {
             SimpleMailMessage mailMessage = createMailMessage(mail);
             javaMailSender.send(mailMessage);
@@ -28,19 +29,18 @@ public class SimpleEmailService {
         }
     }
 
-    public String checkEmail(Mail mail) {
+    public String checkEmail(final Mail mail) {
         if (Optional.ofNullable(mail).isPresent()) {
             return mail.getToCc();
         }
         return null;
     }
-    private SimpleMailMessage createMailMessage(Mail mail) {
+    private SimpleMailMessage createMailMessage(final Mail mail) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(mail.getMailTo());
         mailMessage.setSubject(mail.getSubject());
         mailMessage.setText(mail.getMessage());
         mailMessage.setCc(checkEmail(mail));
-
         return mailMessage;
     }
 }
