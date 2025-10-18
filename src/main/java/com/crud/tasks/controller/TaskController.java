@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/v1/tasks")
+@RequestMapping("/v1/task")
 @RequiredArgsConstructor
 public class TaskController {
 
@@ -52,7 +52,7 @@ public class TaskController {
     }
 
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/createTask",consumes = MediaType.ALL_VALUE)
     public void createTask(@RequestBody TaskDto taskDto) {
         Task task = taskMapper.mapToTask(taskDto);
         service.saveTask(task);
