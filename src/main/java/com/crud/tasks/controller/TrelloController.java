@@ -1,12 +1,11 @@
 package com.crud.tasks.controller;
 
-import com.crud.tasks.domain.CreatedTrelloCard;
+import com.crud.tasks.domain.CreatedTrelloCardDto;
 import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.domain.TrelloCardDto;
 import com.crud.tasks.service.TrelloService;
-import com.crud.tasks.trello.client.TrelloClient;
+import com.crud.tasks.trello.facade.TrelloFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +19,9 @@ import java.util.List;
 public class TrelloController {
     private final TrelloService trelloService;
     private final RestTemplate restTemplate;
+    private final TrelloFacade trelloFacade;
 
+    /*
     @GetMapping("/boards")
     public List<TrelloBoardDto> getTrelloBoards(){
         List<TrelloBoardDto> trelloBoards = trelloService.fetchTrelloBoards();
@@ -36,8 +37,22 @@ public class TrelloController {
     }
 
 
+
     @PostMapping(value = "cards")
-    public ResponseEntity<CreatedTrelloCard> createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
+    public ResponseEntity<CreatedTrelloCardDto> createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
         return ResponseEntity.ok(trelloService.createTrelloCard(trelloCardDto));
     }
+
+     */
+
+    @GetMapping("boards")
+    public ResponseEntity<List<TrelloBoardDto>> getTrelloBoards() {
+        return ResponseEntity.ok(trelloFacade.fetchTrelloBoards());
+    }
+
+    @PostMapping("cards")
+    public ResponseEntity<CreatedTrelloCardDto> createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
+        return ResponseEntity.ok(trelloFacade.createCard(trelloCardDto));
+    }
+
 }
